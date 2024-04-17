@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Project</title>
+    <style>
+        html,
+        body {
+            margin: 0px;
+            height: 100%;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            row-gap: 2rem;
+        }
+
+        .container .header-box {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #051650;
+        }
+
+        .container .header-box #switch-btn {
+            padding: 5px 10px 5px 10px;
+            background-color: #051650;
+            border: 3px solid #051650;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .container .header-box #switch-btn:hover {
+            padding: 7px 12px 7px 12px;
+        }
+
+        .login-card,
+        .register-card {
+            width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #e8e8e8;
+            box-shadow: 2px 2px 10px #ccc;
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 20px
+        }
+
+        .card-header .log {
+            margin: 0;
+            font-size: 24px;
+            color: black;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: 0.5s;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #ccc;
+            color: black;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header-box">
+            <h1>Python registration and login</h1>
+            <button id="switch-btn">Switch to Register</button>
+        </div>
+        <div class="login-card" style="display: block;">
+            <div class="card-header">
+                <div class="log">Login</div>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">Username:</label>
+                    <input name="login-username" id="login-username" type="text" autocomplete="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password:</label>
+                    <input name="login-password" id="login-password" type="password" autocomplete="current-password"
+                        required>
+                </div>
+                <div class="form-group">
+                    <input value="Login" type="submit">
+                </div>
+            </form>
+        </div>
+
+        <div class="register-card" style="display: none;">
+            <div class="card-header">
+                <div class="log">Register</div>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-name">Name:</label>
+                    <input name="register-name" id="register-name" type="text" autocomplete="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-username">Username:</label>
+                    <input name="register-username" id="register-username" type="text" autocomplete="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password:</label>
+                    <input name="register-password" id="register-password" type="password"
+                        autocomplete="current-password" required>
+                </div>
+                <div class="form-group">
+                    <input value="Register" type="submit">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let switchBtn = document.querySelector('#switch-btn')
+        let loginCard = document.querySelector('.login-card')
+        let registerCard = document.querySelector('.register-card')
+        const loginForm = document.querySelector('#login-form')
+        const registerForm = document.querySelector('#register-form')
+
+        switchBtn.addEventListener('click', () => {
+            if (loginCard.style.display === 'block') {
+                loginCard.style.display = 'none';
+                registerCard.style.display = 'block';
+                switchBtn.innerHTML = "Switch to Login"
+            } else {
+                loginCard.style.display = 'block';
+                registerCard.style.display = 'none';
+                switchBtn.innerHTML = "Switch to Register"
+            }
+        })
+
+        registerForm.addEventListener('submit', async (event) => {
+                event.preventDefault()
+
+                const registerFormData = new FormData(registerForm)
+
+                const response = await fetch('http://localhost:5000/register', {
+                    method: 'POST',
+                    body: registerFormData
+                })
+                const result = await response.json()
+
+                if (result.status === 'success') {
+                    Swal.fire({
+                        title: 'The encrypted password is successfully stored in the database.',
+                        icon: 'success',
+                        showConfirmButton: true,
+                        allowOutsideClick: false
+                    })
+                }
+                else {
+                    Swal.fire({
+                        title: 'The encrypted password failed to be stored in the database',
+                        icon: 'error',
+                        showConfirmButton: true,
+                        allowOutsideClick: false
+                    })
+                }
+                
+            })
+
+            loginForm.addEventListener('submit', async (event) => {
+                    event.preventDefault()
+
+                    const loginFormData = new FormData(loginForm)
+
+                    const response = await fetch('http://localhost:5000/login', {
+                        method: 'POST',
+                        body: loginFormData
+                    })
+                    const result = await response.json()
+
+                    if (result.status === 'success') {
+                        Swal.fire({
+                            title: 'The password is correct.',
+                            icon: 'success',
+                            showConfirmButton: true,
+                            allowOutsideClick: false
+                        })
+                    }
+                    else {
+                        Swal.fire({
+                            title: 'The password is incorrect.',
+                            icon: 'error',
+                            showConfirmButton: true,
+                            allowOutsideClick: false
+                        })
+                    }
+
+                })
+    </script>
+</body>
+
+</html>
