@@ -125,6 +125,14 @@
                         required>
                 </div>
                 <div class="form-group">
+                    <label for="login-decryption-method">Decryption method:</label>
+                    <select name="login-decryption-method" id="login-decryption-method">
+                        <option value="rsa">RSA</option>
+                        <option value="des">DES</option>
+                        <option value="aes">AES</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <input value="Login" type="submit">
                 </div>
             </form>
@@ -185,22 +193,12 @@
                 })
                 const result = await response.json()
 
-                if (result.status === 'success') {
-                    Swal.fire({
-                        title: 'The encrypted password is successfully stored in the database.',
-                        icon: 'success',
-                        showConfirmButton: true,
-                        allowOutsideClick: false
-                    })
-                }
-                else {
-                    Swal.fire({
-                        title: 'The encrypted password failed to be stored in the database',
-                        icon: 'error',
-                        showConfirmButton: true,
-                        allowOutsideClick: false
-                    })
-                }
+                Swal.fire({
+                    title: result.message,
+                    icon: result.status,
+                    showConfirmButton: true,
+                    allowOutsideClick: false
+                })
                 
             })
 
@@ -215,22 +213,12 @@
                     })
                     const result = await response.json()
 
-                    if (result.status === 'success') {
-                        Swal.fire({
-                            title: 'The password is correct.',
-                            icon: 'success',
-                            showConfirmButton: true,
-                            allowOutsideClick: false
-                        })
-                    }
-                    else {
-                        Swal.fire({
-                            title: 'The password is incorrect.',
-                            icon: 'error',
-                            showConfirmButton: true,
-                            allowOutsideClick: false
-                        })
-                    }
+                    Swal.fire({
+                        title: result.message,
+                        icon: result.status,
+                        showConfirmButton: true,
+                        allowOutsideClick: false
+                    })
 
                 })
     </script>
