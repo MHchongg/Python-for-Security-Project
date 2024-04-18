@@ -143,17 +143,17 @@ def login():
             mycursor.execute(sqlQuery)
             mydb.commit()
             if mycursor.rowcount == 1:
-                return jsonify({"status": "success", "message": "The password is correct"})
+                return jsonify({"status": "success", "message": f"The password is correct ({decryption_method.upper()})"})
             else:
-                return jsonify({"status": "error", "message": f"{decryption_method}: fail to save the matching result (Decryption success)"})
+                return jsonify({"status": "error", "message": f"{decryption_method.upper()}: fail to save the matching result (Decryption success)"})
         elif decrypted_password != result["password"]:
             sqlQuery = f"UPDATE matching_result SET fail_times = fail_times + 1 WHERE method = '{decryption_method}'"
             mycursor.execute(sqlQuery)
             mydb.commit()
             if mycursor.rowcount == 1:
-                return jsonify({"status": "error", "message": f"{decryption_method}: fail to decrypt the encrypted password"})
+                return jsonify({"status": "error", "message": f"{decryption_method.upper()}: fail to decrypt the encrypted password"})
             else:
-                return jsonify({"status": "error", "message": f"{decryption_method}: fail to save the matching result (Decryption fail)"})
+                return jsonify({"status": "error", "message": f"{decryption_method.upper()}: fail to save the matching result (Decryption fail)"})
         else:
             return jsonify({"status": "warning", "message": "The password is incorrect"})
     else:
