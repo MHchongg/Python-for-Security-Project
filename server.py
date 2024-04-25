@@ -19,18 +19,21 @@ def encryptPassword(method, password, extra):
     match method:
         case "rsa":
             encrypted_password = rsa.encrypt(password.encode(), extra["public_key"])
+            print(f"RSA encrypted password: {encrypted_password}")
             return encrypted_password
 
         case "des":
             cipher = DES.new(extra["des_key"], DES.MODE_ECB)
             padded_password = pad(password.encode(), DES.block_size)
             encrypted_password = cipher.encrypt(padded_password)
+            print(f"DES encrypted password: {encrypted_password}")
             return encrypted_password
 
         case "aes":
             cipher = AES.new(extra["aes_key"], AES.MODE_ECB)
             padded_password = pad(password.encode(), AES.block_size)
             encrypted_password = cipher.encrypt(padded_password)
+            print(f"AES encrypted password: {encrypted_password}")
             return encrypted_password
 
 
@@ -39,18 +42,21 @@ def decryptPassword(method, encrypted_password, extra):
         case "rsa":
             private_key = rsa.PrivateKey.load_pkcs1(extra["result"]["private_key"])
             decrypted_password = rsa.decrypt(encrypted_password, private_key)
+            print(f"RSA decrypted password: {decrypted_password}")
             return decrypted_password.decode()
 
         case "des":
             cipher = DES.new(extra["result"]["des_key"], DES.MODE_ECB)
             decrypted_password = cipher.decrypt(encrypted_password)
             unpadded_password = unpad(decrypted_password, DES.block_size).decode()
+            print(f"DES decrypted password: {decrypted_password}")
             return unpadded_password
 
         case "aes":
             cipher = AES.new(extra["result"]["aes_key"], AES.MODE_ECB)
             decrypted_password = cipher.decrypt(encrypted_password)
             unpadded_password = unpad(decrypted_password, AES.block_size).decode()
+            print(f"AES decrypted password: {decrypted_password}")
             return unpadded_password
 
 
