@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Data from the result dictionary
+# Data from MySQL database
 techniques = ["RSA", "DES", "AES"]
+# SELECT AVG(rsa.generation_time), AVG(des.generation_time), AVG(aes.generation_time) FROM rsa, des, aes;
 avg_generation_time = [0.29325703667000, 0.00029324001000, 0.00021503665333]
 success_times = [30, 30, 30]
 fail_times = [0, 0, 0]
@@ -16,6 +17,9 @@ if __name__ == "__main__":
     ax1.set_xlabel("Encryption Techniques")
     ax1.set_ylabel("Average Generation Time (seconds)")
     ax1.set_title("Average Generation Time Comparison")
+    ax1.set_yscale("log")
+    ax1.set_yticks([1e-4, 1e-3, 1e-2, 1e-1, 1])
+    ax1.set_yticklabels([0.0001, 0.001, 0.01, 0.1, 0.5])
 
     # Adding labels to bars in the first subplot
     for bar in bars1:
